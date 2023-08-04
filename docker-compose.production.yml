@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  backend:
+    image: cr.yandex/crpabbati0r6r7i5ee8c/lizaalert_backend:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+
+  nginx:
+    image: cr.yandex/crpabbati0r6r7i5ee8c/nginx:latest
+    volumes:
+      - ./services/nginx/letsencrypt:/etc/letsencrypt/
+      - static_volume:/var/html/static/
+      - media_volume:/var/html/media/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+
+volumes:
+  static_volume:
+  media_volume:
